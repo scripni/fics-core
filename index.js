@@ -1,4 +1,9 @@
 /*jshint node:true*/
 'use strict';
 
-var session = require('./src/session');
+var Session = require('./src/session');
+var log = require('./src/logger');
+
+var session = new Session();
+session.connect(function() {
+});

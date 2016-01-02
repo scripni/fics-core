@@ -9,6 +9,10 @@ var args = require('yargs').argv;
 // gulp config file
 var config = require('./gulp.config')();
 
+var ficsHost = process.env.FICS_HOST || config.ficsHost;
+var ficsPort = process.env.FICS_PORT || config.ficsPort;
+var serverPort = process.env.SERVER_PORT || config.serverPort;
+
 gulp.task('default', ['help']);
 
 // print available gulp tasks
@@ -39,6 +43,32 @@ gulp.task('test', ['vet'], function() {
 
 // git pre-commit hook
 gulp.task('pre-commit', ['test']);
+
+gulp.task('serve', ['test'], function() {
+  var options = {
+    script: config.nodeApp,
+    env: {
+      'FICS_HOST': ficsHost,
+      'FICS_PORT': ficsPort,
+      'SERVER_PORT': serverPort
+    },
+    watch: [config.server]
+  };
+  return plugins.nodemon(options)
+    .on('restart', ['test'], function(evt) {
+      log('nodemon restarted');
+      log('files changed:\n' + evt);
+    })
+    .on('start', function() {
+      log('nodemon started');
+    })
+    .on('crash', function() {
+      log('nodemon crashed');
+    })
+    .on('exit', function() {
+      log('nodemon exited');
+    });
+});
 
 function log(msg) {
   plugins.util.log(msg);
