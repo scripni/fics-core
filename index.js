@@ -1,3 +1,4 @@
-var net = require('net');
+/*jshint node:true*/
+'use strict';
 
-module.exports = {};
+var session = require('./src/session');

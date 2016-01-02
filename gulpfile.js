@@ -1,3 +1,6 @@
+/*jshint node:true*/
+'use strict';
+
 var gulp = require('gulp');
 // load all gulp modules in a 'plugin' object
 var plugins = require('gulp-load-plugins')({lazy: true});

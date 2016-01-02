@@ -35,5 +35,7 @@
     "mocha": "^2.3.4",
     "yargs": "^3.31.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "winston": "^2.1.1"
+  }
 }
