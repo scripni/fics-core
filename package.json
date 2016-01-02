@@ -29,6 +29,7 @@
     "gulp-print": "^2.0.1",
     "gulp-task-listing": "^1.0.1",
     "gulp-util": "^3.0.7",
+    "guppy-pre-commit": "^0.3.0",
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.1.0",
     "mocha": "^2.3.4",

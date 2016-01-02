@@ -34,6 +34,9 @@ gulp.task('test', ['vet'], function() {
     .pipe(plugins.mocha());
 });
 
+// git pre-commit hook
+gulp.task('pre-commit', ['test']);
+
 function log(msg) {
   plugins.util.log(msg);
 }
