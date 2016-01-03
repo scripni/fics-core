@@ -2,22 +2,10 @@
 'use strict';
 
 var mockery = require('mockery');
-mockery.registerAllowables([
-  '../../src/session'
-  ]);
 
-var mocks = {};
+var mock = {};
 
-mocks.enable = function() {
-  mockery.enable({ useCleanCache: true });
-  mockery.resetCache();
-};
-
-mocks.disable = function() {
-  mockery.disable();
-};
-
-mocks.mockNet = function(connect) {
+mock.register = function(connect) {
   var mockState = {
     connectArgs : [],
     onArgs : [],
@@ -37,8 +25,9 @@ mocks.mockNet = function(connect) {
       socket.on = function(chan, done) {
         mockState.onArgs.push(chan);
       };
-      socket.write = function(data) {
+      socket.write = function(data, encoding, done) {
         mockState.writeArgs.push(data);
+        done();
       };
       return socket;
     }
@@ -48,12 +37,4 @@ mocks.mockNet = function(connect) {
   return mockState;
 };
 
-mocks.mockLog = function() {
-  var logMock = {
-    info: function(msg) {
-    }
-  };
-  mockery.registerMock('./logger', logMock);
-};
-
-module.exports = mocks;
+module.exports = mock;
