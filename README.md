@@ -1,6 +1,6 @@
 Node.js client connecting to the Free Internet Chess Server (FICS), freechess.org.
 
-The connection is made to a telnet interface (telnet freechess.org:5000).
+The connection is made over telnet `telnet freechess.org:5000`.
 
 # Geting started
     npm install
