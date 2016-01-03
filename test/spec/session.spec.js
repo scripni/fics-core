@@ -20,8 +20,8 @@ describe('a valid session', function() {
   });
   it('connects to the correct host', function(done) {
     session.connect(function() {
-      assert.equal(netMockState.connectArgs.port, 5000);
-      assert.equal(netMockState.connectArgs.host, 'freechess.org');
+      assert.equal(netMockState.connectArgs[0].port, 5000);
+      assert.equal(netMockState.connectArgs[0].host, 'freechess.org');
       done();
     });
   });

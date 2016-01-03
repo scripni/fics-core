@@ -18,17 +18,27 @@ mocks.disable = function() {
 };
 
 mocks.mockNet = function(connect) {
-  var mockState = {}; 
+  var mockState = {
+    connectArgs : [],
+    onArgs : [],
+    writeArgs : []
+  };
   var netMock = {
     Socket : function() {
       var socket = {};
       socket.connect = function(port, host, done) {
-        mockState.connectArgs = {
+        mockState.connectArgs.push({
           port: port,
           host: host,
           done: done
-        };
+        });
         done();
+      };
+      socket.on = function(chan, done) {
+        mockState.onArgs.push(chan);
+      };
+      socket.write = function(data) {
+        mockState.writeArgs.push(data);
       };
       return socket;
     }
