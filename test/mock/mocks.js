@@ -9,7 +9,6 @@ mockery.registerAllowables([
   ]);
 
 module.exports = {
-  mockery: mockery,
   enable: function() {
     mockery.enable({ useCleanCache: true });
     mockery.resetCache();
