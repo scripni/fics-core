@@ -16,14 +16,6 @@ module.exports = {
   disable: function() {
     mockery.disable();
   },
-  net: {
-    register: function() {
-      return netMock.register();
-    }
-  },
-  logger: {
-    register: function() {
-      loggerMock.register();
-    }
-  }
+  net:  netMock,
+  logger: loggerMock
 };
