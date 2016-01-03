@@ -5,7 +5,7 @@ module.exports = function() {
       './*.js'
     ],
     testjs: [
-      './src/test/*.js'
+      './test/*.js'
     ],
     ficsHost: 'freechess.org',
     ficsPort: 5000,

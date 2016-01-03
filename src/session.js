@@ -16,6 +16,7 @@ var Session = function() {
     }
 
     var client = new net.Socket();
+
     client.connect(ficsPort, ficsHost, function() {
       log.info('client connected to ' + ficsHost + ':' + ficsPort);
       if (hasCallback) {
