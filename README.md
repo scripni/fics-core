@@ -2,6 +2,6 @@ Node.js client connecting to the Free Internet Chess Server (FICS), freechess.or
 
 The connection is made to a telnet interface (telnet freechess.org:5000).
 
-# H2
+# Geting started
     npm install
     gulp serve
