@@ -4,7 +4,7 @@ Node.js client connecting to the Free Internet Chess Server (FICS), freechess.or
     npm install
     gulp serve
 
-This will run code analysis, tests and start a new app instance through nodemon. Editing any file will trigger validation and restart the process.
+The `gulp serve` command will run code analysis and tests, and if no errors are found will start a new app instance through nodemon. Editing any file will kill the current instance, re-execute validation, and start a new app instance if successful.
 
 ## Notes
 
