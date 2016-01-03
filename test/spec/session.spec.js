@@ -2,8 +2,11 @@
 'use strict';
 
 var assert = require('assert');
-var mockery = require('../mock/net.mock');
-mockery.enable();
+var mocks = require('../mock/net.mock');
+
+var netMockState = mocks.mockNet();
+mocks.mockLog();
+mocks.enable();
 
 var Session = require('../../src/session');
 
@@ -13,11 +16,12 @@ describe('a valid session', function() {
     session = new Session();
   });
   after(function() {
-    mockery.disable();
+    mocks.disable();
   });
-  it('connects to the specified host', function(done) {
+  it('connects to the correct host', function(done) {
     session.connect(function() {
-      console.log('test connected');
+      assert.equal(netMockState.connectArgs.port, 5000);
+      assert.equal(netMockState.connectArgs.host, 'freechess.org');
       done();
     });
   });

@@ -6,31 +6,44 @@ mockery.registerAllowables([
   '../../src/session'
   ]);
 
-var lastConnectArgs = {};
+var mocks = {};
 
-var netMock = {
-  Socket : function() {
-    console.log('socket!!!');
-    var socket = {};
-    socket.connect = function(port, host, done) {
-      lastConnectArgs = {
-        port: port,
-        host: host,
-        done: done
+mocks.enable = function() {
+  mockery.enable({ useCleanCache: true });
+  mockery.resetCache();
+};
+
+mocks.disable = function() {
+  mockery.disable();
+};
+
+mocks.mockNet = function(connect) {
+  var mockState = {}; 
+  var netMock = {
+    Socket : function() {
+      var socket = {};
+      socket.connect = function(port, host, done) {
+        mockState.connectArgs = {
+          port: port,
+          host: host,
+          done: done
+        };
+        done();
       };
-      console.log('alright');
-      done();
-    };
-    return socket;
-  }
+      return socket;
+    }
+  };
+  mockery.registerMock('net', netMock);
+
+  return mockState;
 };
 
-var logMock = {
-  info: function(msg) {
-  }
+mocks.mockLog = function() {
+  var logMock = {
+    info: function(msg) {
+    }
+  };
+  mockery.registerMock('./logger', logMock);
 };
 
-mockery.registerMock('net', netMock);
-mockery.registerMock('./logger', logMock);
-
-module.exports = mockery;
+module.exports = mocks;
