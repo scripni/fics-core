@@ -1,4 +1,4 @@
-/* jshint node:true, -W117 */
+/* jshint -W117 */
 'use strict';
 
 var assert = require('assert');
