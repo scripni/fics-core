@@ -17,16 +17,16 @@ class Session {
   connect(done) {
     var self = this;
     assert.equal(typeof done, 'function');
-    self.client.connect(ficsPort, ficsHost, function() {
+    self.client.connect(ficsPort, ficsHost, () => {
       log.info('client connected to ' + ficsHost + ':' + ficsPort);
         done();
     });
 
-    self.client.on('data', function(data) {
+    self.client.on('data', data => {
       self.interpreter.interpret(data);
     });
 
-    self.client.on('close', function() {
+    self.client.on('close', () => {
       log.info('client closed');
     });
   }

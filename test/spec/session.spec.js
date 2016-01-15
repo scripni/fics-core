@@ -5,8 +5,8 @@ var expect  = require('chai').expect,
     mockery = require('mockery'),
     sinon   = require('sinon');
 
-describe('session', function() {
-  describe('valid', function() {
+describe('session', () => {
+  describe('valid', () => {
     var socketConnectStub,
         Session,
         socketStub = {
@@ -44,7 +44,7 @@ describe('session', function() {
       mockery.deregisterAll();
     });
 
-    it('connects to the correct host and signs in', function() {
+    it('connects to the correct host and signs in', () => {
       var session = new Session();
       expect(socketStub.connect.called).to.be.false;
       session.connect(function() {
@@ -56,18 +56,20 @@ describe('session', function() {
       });
     });
 
-    it('passes received messages to the interpreter', function() {
+    it('passes received messages to the interpreter', () => {
       var session = new Session();
-      session.connect(function() {
-        session.signIn(function() {
+      session.connect(() => {
+        session.signIn(() => {
           socketStub.on.getCall(0).args[1]('fake message');
           expect(interpreterStub.interpret.called).to.be.true;
+          expect(interpreterStub.interpret.calledWith('fake message'))
+            .to.be.true;
         });
       });
     });
   });
 
-  describe('disconnected session', function() {
+  describe('disconnected session', () => {
     it('fails to sign in');
   });
 });
