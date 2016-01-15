@@ -15,28 +15,26 @@ class Session {
 
   // connects to FICS
   connect(done) {
-    var self = this;
     assert.equal(typeof done, 'function');
-    self.client.connect(ficsPort, ficsHost, () => {
+    this.client.connect(ficsPort, ficsHost, () => {
       log.info('client connected to ' + ficsHost + ':' + ficsPort);
         done();
     });
 
-    self.client.on('data', data => {
-      self.interpreter.interpret(data);
+    this.client.on('data', data => {
+      this.interpreter.interpret(data);
     });
 
-    self.client.on('close', () => {
+    this.client.on('close', () => {
       log.info('client closed');
     });
   }
 
   signIn(done) {
-    var self = this;
     log.info('signing in as guest');
     // 2 newlines is enough when running 'telnet freechess.org 5000',
     // 10 seem to be required with this client... need to figure out why
-    self.client.write('g\n\n\n\n\n\n\n\n\n\n', 'ASCII', done);
+    this.client.write('g\n\n\n\n\n\n\n\n\n\n', 'ASCII', done);
   }
 }
 
