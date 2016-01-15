@@ -6,7 +6,7 @@ var expect  = require('chai').expect,
     sinon   = require('sinon');
 
 describe('session', () => {
-  describe('valid', () => {
+  describe('a valid session', () => {
     var socketConnectStub,
         Session,
         socketStub = {
@@ -67,9 +67,5 @@ describe('session', () => {
         });
       });
     });
-  });
-
-  describe('disconnected session', () => {
-    it('fails to sign in');
   });
 });
