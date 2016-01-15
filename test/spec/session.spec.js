@@ -1,35 +1,69 @@
-/* jshint -W117 */
+/* jshint -W117, expr:true */
 'use strict';
 
-var assert = require('assert');
-var mocks = require('../mock/mocks');
-mocks.net.register();
-mocks.logger.register();
-mocks.enable();
-
-var Session = require('../../src/session');
+var expect  = require('chai').expect,
+    mockery = require('mockery'),
+    sinon   = require('sinon');
 
 describe('session', function() {
-  describe('valid session', function() {
-    var session = {};
+  describe('valid', function() {
+    var socketConnectStub,
+        Session,
+        socketStub = {
+          connect:  sinon.stub().callsArg(2),
+          on:       sinon.stub(),
+          write:    sinon.stub().callsArg(2)
+        },
+        interpreterStub = {
+          interpret: sinon.stub()
+        };
+
     before(function() {
-      session = new Session();
-    });
-    after(function() {
-      mocks.disable();
+      mockery.registerAllowables([
+        '../../src/session',
+        'assert'
+        ]);
+      mockery.registerMock('./logger', {
+        info: sinon.stub()
+      });
+      mockery.registerMock('./interpreter', function() {
+        return interpreterStub;
+      });
+      mockery.registerMock('net', {
+        Socket: function() {
+          return socketStub;
+        }
+      });
+
+      mockery.enable();
+      Session = require('../../src/session');
     });
 
-    it('connects to the correct host and signs in', function(done) {
+    after(function() {
+      mockery.disable();
+      mockery.deregisterAll();
+    });
+
+    it('connects to the correct host and signs in', function() {
+      var session = new Session();
+      expect(socketStub.connect.called).to.be.false;
       session.connect(function() {
-        assert.equal(mocks.net.state.socket.connect.args[0].port, 5000);
-        assert.equal(mocks.net.state.socket.connect.args[0].host, 'freechess.org');
+        expect(socketStub.connect.called).to.be.true;
+        expect(socketStub.write.called).to.be.false;
         session.signIn(function() {
-          assert.equal(mocks.net.state.socket.write.args[0], 'g\n\n\n\n\n\n\n\n\n\n');
-          done();
+          expect(socketStub.write.called).to.be.true;
         });
       });
     });
+
     it('passes received messages to the interpreter', function() {
+      var session = new Session();
+      session.connect(function() {
+        session.signIn(function() {
+          socketStub.on.getCall(0).args[1]('fake message');
+          expect(interpreterStub.interpret.called).to.be.true;
+        });
+      });
     });
   });
 

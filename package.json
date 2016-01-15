@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/scripni/fics-core#readme",
   "devDependencies": {
+    "chai": "^3.4.1",
     "gulp": "^3.9.0",
     "gulp-if": "^2.0.0",
     "gulp-jshint": "^2.0.0",
@@ -36,6 +37,7 @@
     "mocha": "^2.3.4",
     "mockery": "^1.4.0",
     "should": "^8.0.2",
+    "sinon": "^1.17.2",
     "yargs": "^3.31.0"
   },
   "dependencies": {
