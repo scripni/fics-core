@@ -3,17 +3,18 @@
 var net         = require('net'),
     assert      = require('assert'),
     log         = require('./logger'),
-    Interpreter = require('./interpreter'),
+    Parser      = require('./parser'),
     ficsHost    = process.env.FICS_HOST || 'freechess.org',
     ficsPort    = process.env.FICS_PORT || 5000;
 
+// Keeps a persistent TCP connection to freechess.org, and passes received
+// data to a parser. 
 class Session {
   constructor() {
     this.client = new net.Socket();
-    this.interpreter = new Interpreter();
+    this.parser = new Parser();
   }
 
-  // connects to FICS
   connect(done) {
     assert.equal(typeof done, 'function');
     this.client.connect(ficsPort, ficsHost, () => {
@@ -21,8 +22,9 @@ class Session {
         done();
     });
 
+    // pass received data to parser
     this.client.on('data', data => {
-      this.interpreter.interpret(data);
+      this.parser.parse(data);
     });
 
     this.client.on('close', () => {

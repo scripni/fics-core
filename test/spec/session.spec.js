@@ -1,24 +1,23 @@
 /* jshint -W117, expr:true */
 'use strict';
 
-var expect  = require('chai').expect,
-    mockery = require('mockery'),
-    sinon   = require('sinon');
+var expect  = require('chai').expect;
+var mockery = require('mockery');
+var sinon   = require('sinon');
 
 describe('session', () => {
   describe('a valid session', () => {
-    var socketConnectStub,
-        Session,
-        socketStub = {
+    var socketConnectStub, Session;
+    var socketStub = {
           connect:  sinon.stub().callsArg(2),
           on:       sinon.stub(),
           write:    sinon.stub().callsArg(2)
-        },
-        interpreterStub = {
-          interpret: sinon.stub()
+        };
+    var parserStub = {
+          parse: sinon.stub()
         };
 
-    before(function() {
+    before(() => {
       mockery.registerAllowables([
         '../../src/session',
         'assert'
@@ -26,8 +25,8 @@ describe('session', () => {
       mockery.registerMock('./logger', {
         info: sinon.stub()
       });
-      mockery.registerMock('./interpreter', function() {
-        return interpreterStub;
+      mockery.registerMock('./parser', function() {
+        return parserStub;
       });
       mockery.registerMock('net', {
         Socket: function() {
@@ -39,7 +38,7 @@ describe('session', () => {
       Session = require('../../src/session');
     });
 
-    after(function() {
+    after(() => {
       mockery.disable();
       mockery.deregisterAll();
     });
@@ -47,10 +46,10 @@ describe('session', () => {
     it('connects to the correct host and signs in', () => {
       var session = new Session();
       expect(socketStub.connect.called).to.be.false;
-      session.connect(function() {
+      session.connect(() => {
         expect(socketStub.connect.called).to.be.true;
         expect(socketStub.write.called).to.be.false;
-        session.signIn(function() {
+        session.signIn(() => {
           expect(socketStub.write.called).to.be.true;
         });
       });
@@ -61,8 +60,8 @@ describe('session', () => {
       session.connect(() => {
         session.signIn(() => {
           socketStub.on.getCall(0).args[1]('fake message');
-          expect(interpreterStub.interpret.called).to.be.true;
-          expect(interpreterStub.interpret.calledWith('fake message'))
+          expect(parserStub.parse.called).to.be.true;
+          expect(parserStub.parse.calledWith('fake message'))
             .to.be.true;
         });
       });
