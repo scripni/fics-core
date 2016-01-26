@@ -7,7 +7,7 @@ const sinon   = require('sinon');
 
 describe('session', () => {
   describe('a valid session', () => {
-    let socketConnectStub, Session;
+    let Session;
     let socketStub = {
           connect:  sinon.stub().callsArg(2),
           on:       sinon.stub(),
@@ -60,9 +60,8 @@ describe('session', () => {
       session.connect(() => {
         session.signIn(() => {
           socketStub.on.getCall(0).args[1]('fake message');
-          expect(parserStub.parse.called).to.be.true;
-          expect(parserStub.parse.calledWith('fake message'))
-            .to.be.true;
+          expect(parserStub.parse.calledOnce).to.be.true;
+          expect(parserStub.parse.firstCall.args[0]).to.equal('fake message');
         });
       });
     });
