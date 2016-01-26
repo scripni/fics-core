@@ -1,19 +1,19 @@
 /* jshint -W117, expr:true */
 'use strict';
 
-var expect  = require('chai').expect;
-var mockery = require('mockery');
-var sinon   = require('sinon');
+const expect  = require('chai').expect;
+const mockery = require('mockery');
+const sinon   = require('sinon');
 
 describe('session', () => {
   describe('a valid session', () => {
-    var socketConnectStub, Session;
-    var socketStub = {
+    let socketConnectStub, Session;
+    let socketStub = {
           connect:  sinon.stub().callsArg(2),
           on:       sinon.stub(),
           write:    sinon.stub().callsArg(2)
         };
-    var parserStub = {
+    let parserStub = {
           parse: sinon.stub()
         };
 
@@ -44,7 +44,7 @@ describe('session', () => {
     });
 
     it('connects to the correct host and signs in', () => {
-      var session = new Session();
+      let session = new Session();
       expect(socketStub.connect.called).to.be.false;
       session.connect(() => {
         expect(socketStub.connect.called).to.be.true;
@@ -56,7 +56,7 @@ describe('session', () => {
     });
 
     it('passes received messages to the interpreter', () => {
-      var session = new Session();
+      let session = new Session();
       session.connect(() => {
         session.signIn(() => {
           socketStub.on.getCall(0).args[1]('fake message');

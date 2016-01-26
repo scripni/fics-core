@@ -1,11 +1,11 @@
 'use strict';
 
-var net         = require('net'),
-    assert      = require('assert'),
-    log         = require('./logger'),
-    Parser      = require('./parser'),
-    ficsHost    = process.env.FICS_HOST || 'freechess.org',
-    ficsPort    = process.env.FICS_PORT || 5000;
+const net       = require('net');
+const assert    = require('assert');
+const log       = require('./logger');
+const Parser    = require('./parser');
+const ficsHost  = process.env.FICS_HOST || 'freechess.org';
+const ficsPort  = process.env.FICS_PORT || 5000;
 
 // Keeps a persistent TCP connection to freechess.org, and passes received
 // data to a parser. 
