@@ -75,6 +75,15 @@ describe('parser', () => {
       expect(interpreterMock.interpret.secondCall.calledWith('msg2')).to.be.true;
     });
 
-    it('can handle separator of length greater than one');
+    it('can handle separator of length greater than one', () => {
+      var parser = new Parser('fics%');
+      parser.parse('Welcome to FICS!fics%');
+      expect(interpreterMock.interpret.calledOnce).to.be.true;
+      expect(interpreterMock.interpret.firstCall.calledWith('Welcome to FICS!')).to.be.true;
+    });
+
+    it('trims whitespace before a message');
+    it('trims whitespace after a message');
+    it('trims whitespace before and after a message');
   });
 });
