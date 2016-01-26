@@ -107,5 +107,13 @@ describe('parser', () => {
       parser.parse('there!%');
       expect(interpretSpy.firstCall.args[0]).to.equal('Hi there!');
     });
+
+    it('doesn`t remove valid data when previous message is trimmed');
+
+    it('clears inner data once message is parsed', () => {
+      var parser = new Parser('%');
+      parser.parse('Hi!%');
+      expect(parser.data).to.be.empty;
+    });
   });
 });
