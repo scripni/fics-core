@@ -44,6 +44,7 @@ describe('parser', () => {
     it('identifies a single message if passed in one chunk', () => {
       var parser = new Parser('%');
       parser.parse('message%');
+      expect(interpreterMock.interpret.calledOnce).to.be.true;
       expect(interpreterMock.interpret.calledWith('message')).to.be.true;
     });
 
@@ -52,6 +53,7 @@ describe('parser', () => {
       parser.parse('part 1');
       expect(interpreterMock.interpret.called).to.be.false;
       parser.parse(' part 2%');
+      expect(interpreterMock.interpret.calledOnce).to.be.true;
       expect(interpreterMock.interpret.calledWith('part 1 part 2')).to.be.true;
     });
 
@@ -62,7 +64,17 @@ describe('parser', () => {
       expect(interpreterMock.interpret.firstCall.calledWith('msg1')).to.be.true;
       expect(interpreterMock.interpret.secondCall.calledWith('msg2')).to.be.true;
     });
-    
-    it('identifies multiple messages in multiple chunks');
+
+    it('identifies multiple messages in multiple chunks', () => {
+      var parser = new Parser('%');
+      expect(interpreterMock.interpret.called).to.be.false;
+      parser.parse('msg');
+      parser.parse('1%msg2%msg3');
+      expect(interpreterMock.interpret.calledTwice).to.be.true;
+      expect(interpreterMock.interpret.firstCall.calledWith('msg1')).to.be.true;
+      expect(interpreterMock.interpret.secondCall.calledWith('msg2')).to.be.true;
+    });
+
+    it('can handle separator of length greater than one');
   });
 });
