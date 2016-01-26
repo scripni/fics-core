@@ -22,7 +22,7 @@ class Parser {
     var messageEnd = this.data.indexOf(this.separator);
     // split data by separator and pass each message to the interpreter
     while (messageEnd >= 0) {
-      var parsed = this.data.substring(messageStart, messageEnd);
+      var parsed = this.data.substring(messageStart, messageEnd).trim();
       log.info(`found message of length ${parsed.length}`);
       this.interpreter.interpret(parsed);
       // move cursor after separator

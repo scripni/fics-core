@@ -6,7 +6,7 @@ var mockery = require('mockery');
 var sinon   = require('sinon');
 
 describe('parser', () => {
-  var Parser, interpreterMock;
+  var Parser, interpreterMock, interpretSpy;
 
   before(() => {
     mockery.registerAllowables([
@@ -27,6 +27,7 @@ describe('parser', () => {
     interpreterMock = {
       interpret: sinon.spy()
     };
+    interpretSpy = interpreterMock.interpret;
   });
 
   after(function() {
@@ -38,52 +39,73 @@ describe('parser', () => {
     it('handles a message with no separator', () => {
       var parser = new Parser('%');
       parser.parse('message');
-      expect(interpreterMock.interpret.called).to.be.false;
+      expect(interpretSpy.called).to.be.false;
     });
 
     it('identifies a single message if passed in one chunk', () => {
       var parser = new Parser('%');
-      parser.parse('message%');
-      expect(interpreterMock.interpret.calledOnce).to.be.true;
-      expect(interpreterMock.interpret.calledWith('message')).to.be.true;
+      parser.parse('msg%');
+      expect(interpretSpy.calledOnce).to.be.true;
+      expect(interpretSpy.firstCall.args[0]).to.equal('msg');
     });
 
     it('identifies a single message if passed in two chunks', () => {
       var parser = new Parser('%');
-      parser.parse('part 1');
-      expect(interpreterMock.interpret.called).to.be.false;
-      parser.parse(' part 2%');
-      expect(interpreterMock.interpret.calledOnce).to.be.true;
-      expect(interpreterMock.interpret.calledWith('part 1 part 2')).to.be.true;
+      parser.parse('p 1');
+      expect(interpretSpy.called).to.be.false;
+      parser.parse(' p 2%');
+      expect(interpretSpy.calledOnce).to.be.true;
+      expect(interpretSpy.firstCall.args[0]).to.equal('p 1 p 2');
     });
 
     it('identifies multiple messages in the same chunk', () => {
       var parser = new Parser('%');
       parser.parse('msg1%msg2%msg3');
-      expect(interpreterMock.interpret.calledTwice).to.be.true;
-      expect(interpreterMock.interpret.firstCall.calledWith('msg1')).to.be.true;
-      expect(interpreterMock.interpret.secondCall.calledWith('msg2')).to.be.true;
+      expect(interpretSpy.calledTwice).to.be.true;
+      expect(interpretSpy.firstCall.args[0]).to.equal('msg1');
+      expect(interpretSpy.secondCall.args[0]).to.equal('msg2');
     });
 
     it('identifies multiple messages in multiple chunks', () => {
       var parser = new Parser('%');
-      expect(interpreterMock.interpret.called).to.be.false;
+      expect(interpretSpy.called).to.be.false;
       parser.parse('msg');
       parser.parse('1%msg2%msg3');
-      expect(interpreterMock.interpret.calledTwice).to.be.true;
-      expect(interpreterMock.interpret.firstCall.calledWith('msg1')).to.be.true;
-      expect(interpreterMock.interpret.secondCall.calledWith('msg2')).to.be.true;
+      expect(interpretSpy.calledTwice).to.be.true;
+      expect(interpretSpy.firstCall.args[0]).to.equal('msg1');
+      expect(interpretSpy.secondCall.args[0]).to.equal('msg2');
     });
 
     it('can handle separator of length greater than one', () => {
       var parser = new Parser('fics%');
       parser.parse('Welcome to FICS!fics%');
-      expect(interpreterMock.interpret.calledOnce).to.be.true;
-      expect(interpreterMock.interpret.firstCall.calledWith('Welcome to FICS!')).to.be.true;
+      expect(interpretSpy.calledOnce).to.be.true;
+      expect(interpretSpy.firstCall.args[0]).to.equal('Welcome to FICS!');
     });
 
-    it('trims whitespace before a message');
-    it('trims whitespace after a message');
-    it('trims whitespace before and after a message');
+    it('trims whitespace before a message', () => {
+      var parser = new Parser('%');
+      parser.parse(' Hi!%');
+      expect(interpretSpy.firstCall.args[0]).to.equal('Hi!');
+    });
+
+    it('trims whitespace after a message', () => {
+      var parser = new Parser('%');
+      parser.parse('Hi! %');
+      expect(interpretSpy.firstCall.args[0]).to.equal('Hi!');
+    });
+
+    it('trims whitespace before and after a message', () => {
+      var parser = new Parser('%');
+      parser.parse(' Hi! %');
+      expect(interpretSpy.firstCall.args[0]).to.equal('Hi!');
+    });
+
+    it('doesn`t trim whitespace inside a message if split into chunks', () => {
+      var parser = new Parser('%');
+      parser.parse('Hi ');
+      parser.parse('there!%');
+      expect(interpretSpy.firstCall.args[0]).to.equal('Hi there!');
+    });
   });
 });
