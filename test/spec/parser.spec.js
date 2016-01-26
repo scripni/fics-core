@@ -82,7 +82,9 @@ describe('parser', () => {
       expect(interpretSpy.calledOnce).to.be.true;
       expect(interpretSpy.firstCall.args[0]).to.equal('Welcome to FICS!');
     });
+  });
 
+  describe('trimming whitespace', () => {
     it('trims whitespace before a message', () => {
       let parser = new Parser('%');
       parser.parse(' Hi!%');
