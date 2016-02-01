@@ -7,6 +7,7 @@ const sinon   = require('sinon');
 
 describe('interpreter', () => {
   let Interpreter;
+  const InterpreterSeekSpec = require('./interpreter.seek.spec');
   
   before(() => {
     mockery.registerAllowables([
@@ -26,8 +27,29 @@ describe('interpreter', () => {
     mockery.deregisterAll();
   });
   
-  describe('interpret a welcome message');
-  describe('interpret a seek message');
-  describe('interpret a game message');
-  describe('interpret a chat message');
+  describe('interpret a welcome message', () => {
+      it('matches a welcome message');
+      it('extracts the username from the welcome message');
+  });
+  
+  describe('interpret a seek message', () => {
+      it('matches a seek message', function() {
+          let interpreter = new Interpreter();
+          let spec = new InterpreterSeekSpec();
+          spec.assert(interpreter);
+      });
+      it('extracts the seeker username');
+      it('extracts the seeker rating');
+      it('extracts the seek game type');
+      it('extracts the seek time control');
+      it('extracts the seek color');
+  });
+  
+  describe('interpret a game message', () => {
+      
+  });
+  
+  describe('interpret a chat message', () => {
+      
+  });
 });
