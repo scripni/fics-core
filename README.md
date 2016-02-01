@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/scripni/fics-core.svg?branch=master)](https://travis-ci.org/scripni/fics-core)
+
 Node.js client connecting to the Free Internet Chess Server (FICS), freechess.org.
 
 ## Geting started
